@@ -18,6 +18,6 @@ COPY --from=build /app /app
 RUN node --version && chmod +x extra/entrypoint.sh
 EXPOSE 3001
 VOLUME ["/app/data"]
-HEALTHCHECK --interval=60s --timeout=30s --start-period=180s --retries=5 CMD node -e "require('http').get('http://127.0.0.1:3001/',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+HEALTHCHECK --interval=60s --timeout=30s --start-period=180s --retries=5 CMD node -e "require('http').get('http://127.0.0.1:3001/dashboard',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "extra/entrypoint.sh"]
 CMD ["node", "server/server.js"]
