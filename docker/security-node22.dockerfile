@@ -7,7 +7,8 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 CYPRESS_INSTALL_BINARY=0
 COPY .npmrc package.json package-lock.json ./
 RUN node --version && npm ci
 COPY . .
-RUN NODE_OPTIONS=--max-old-space-size=768 UV_THREADPOOL_SIZE=1 npm run build && npm prune --omit=dev && npm cache clean --force
+ARG BUILD_NODE_HEAP=2048
+RUN NODE_OPTIONS=--max-old-space-size=${BUILD_NODE_HEAP} UV_THREADPOOL_SIZE=1 npm run build && npm prune --omit=dev && npm cache clean --force
 
 FROM louislam/uptime-kuma:base-debian@sha256:1f0dffce83eb0997917edd4bd1641667442afc2563021469291a573c15970224 AS release
 COPY --from=node_runtime /usr/local/bin/node /usr/local/bin/node
